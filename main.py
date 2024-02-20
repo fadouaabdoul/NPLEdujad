@@ -7,7 +7,7 @@ import torch
 def speech_to_text(audio_file):
     # Initialize PaddleSpeech model
     config = inference.Config(
-        "C:/Users/hp/OneDrive/Bureau/DeepSpeech/PaddleSpeech")  # Replace with the path to your PaddleSpeech model directory
+        r"C:/Users/hp/OneDrive/Bureau/DeepSpeech/PaddleSpeech")  # Replace with the path to your PaddleSpeech model directory
     predictor = inference.create_predictor(config)
 
     # Process audio file
@@ -56,4 +56,5 @@ def main():
     print("Language Analysis Result:", language_analysis_result)
 
 
-main()
+
+
