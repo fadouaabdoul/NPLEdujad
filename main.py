@@ -1,3 +1,5 @@
+import sys
+import string
 import speech_recognition as sr
 import gramformer
 
@@ -15,8 +17,14 @@ def speech_to_text(audio_file):
         return "Speech recognition service is unavailable"
 
 #%%
-result = speech_to_text("data/Test3.wav")
-print("Transcribed Text:", result)
+
+try:
+    result = speech_to_text("data/Test3.wav")
+    print("Transcribed Text:", result)
+except ValueError:
+    print('Error importing your file. Try uploading a file with the extension ".wav", or press on record to record a '
+          'new tape')
+    sys.exit()
 # Initialize Gramformer (adjust models parameter if needed)
 gf = gramformer.Gramformer(models=1)
 
@@ -33,15 +41,32 @@ while True:
         corrected_sentences = gf.correct(user_input)
 
         # Compare original and corrected versions to highlight potential mistakes
+
+
         for original, corrected in zip(user_input, corrected_sentences):
-            if original != corrected:
-                print(f"Potential Mistake: '{original}'")
-                print(f"Suggested Correction: '{corrected}'")
-                print("-" * 30)  # Separator between different corrections
+            if corrected is None:  # Check if Gramformer returned None
+                print(f"No corrections suggested for: '{original}'")
             else:
-                print(f"Cannot process this text: '{original}'")
+                if original != corrected:
+                    translator = str.maketrans('', '', string.punctuation)
+                    original_words = result.translate(translator).split()
+                    corrected_words = corrected.translate(translator).split()
+
+                    mistakes = [word for word, corrected_words in zip(original_words, corrected_words) if word != corrected_words]
+
+                    print(f"Your transcribed text: '{result}'")
+                    if mistakes:
+                        print(f'Your mistakes are: ')
+                        for mistakes in mistakes:
+                            print(f'- {mistakes}')
+                    else:
+                        print('There is no mistakes in your text')
+                    print(f"Suggested Correction: '{corrected}'")
+                    print("-" * 30)  # Separator between different corrections
+                else:
+                    print(f"Cannot process this text: '{original}'")
     if choice == '2':
-        break
+            break
 
     # Process the input with Gramformer
 
