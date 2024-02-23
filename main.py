@@ -1,60 +1,48 @@
-import paddle
-from paddle import inference
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
-
+import speech_recognition as sr
+import gramformer
 
 def speech_to_text(audio_file):
-    # Initialize PaddleSpeech model
-    config = inference.Config(
-        r"C:/Users/hp/OneDrive/Bureau/DeepSpeech/PaddleSpeech")  # Replace with the path to your PaddleSpeech model directory
-    predictor = inference.create_predictor(config)
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(audio_file) as source:
+        audio_data = recognizer.record(source)  # Record the audio file
 
-    # Process audio file
-    input_wav_data = paddle.to_tensor([paddle.load_wav_file(audio_file)], dtype="float32")
+    try:
+        text = recognizer.recognize_google(audio_data)  # Use the Google Web Speech API for recognition
+        return text
+    except sr.UnknownValueError:
+        return "Speech recognition could not understand the audio"
+    except sr.RequestError:
+        return "Speech recognition service is unavailable"
 
-    # Run inference
-    input_tensor = predictor.get_input(0)
-    input_tensor.set_data(input_wav_data)
+#%%
+result = speech_to_text("data/Test3.wav")
+print("Transcribed Text:", result)
+# Initialize Gramformer (adjust models parameter if needed)
+gf = gramformer.Gramformer(models=1)
 
-    predictor.run()
+while True:
+    # Get user input
+    user_input = result
+    print("Do you want to:")
+    print("      1. Correct this text")
+    print("      2. Exit the program")
 
-    # Get the result
-    output_tensor = predictor.get_output(0)
-    result = output_tensor.numpy()[0]
+    choice = input("Enter your choice: ")
+    if choice == '1':
 
-    return result
+        corrected_sentences = gf.correct(user_input)
 
+        # Compare original and corrected versions to highlight potential mistakes
+        for original, corrected in zip(user_input, corrected_sentences):
+            if original != corrected:
+                print(f"Potential Mistake: '{original}'")
+                print(f"Suggested Correction: '{corrected}'")
+                print("-" * 30)  # Separator between different corrections
+            else:
+                print(f"Cannot process this text: '{original}'")
+    if choice == '2':
+        break
 
-def analyze_language_errors(text):
-    # Initialize BERT model for language analysis
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-    model = BertForSequenceClassification.from_pretrained("bert-base-uncased")
+    # Process the input with Gramformer
 
-    # Tokenize and encode the text
-    inputs = tokenizer(text, return_tensors="pt")
-
-    # Perform inference with BERT
-    outputs = model(**inputs)
-
-    # Get the predicted class (0 for correct, 1 for incorrect)
-    predicted_class = torch.argmax(outputs.logits, dim=1).item()
-
-    return "Correct" if predicted_class == 0 else "Incorrect"
-
-
-def main():
-    # Replace with the path to your audio file
-    audio_file = "E:/test.m4a"
-
-    # Perform speech-to-text
-    transcribed_text = speech_to_text(audio_file)
-    print("Transcribed Text:", transcribed_text)
-
-    # Analyze language errors with BERT
-    language_analysis_result = analyze_language_errors(transcribed_text)
-    print("Language Analysis Result:", language_analysis_result)
-
-
-
-
+print("Exiting the program.")

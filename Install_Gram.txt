@@ -1,0 +1,11 @@
+0. pip install SpeechRecognition
+1. create a virtual environment
+2. go to command prompt
+3. Enter the following commands: 
+	- python3 -m venv my_venv 
+	- pip install numpy scipy torch transformers tqdm
+	- pip3 install torch torchvision torchaudio
+	- pip install -U git+https://github.com/PrithivirajDamodaran/Gramformer.git (try also to install gramform package manually)
+	- python -m spacy download en_core_web_sm
+-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-
+It should be working Now, enjoy :)
