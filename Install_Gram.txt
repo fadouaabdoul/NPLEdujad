@@ -1,9 +1,5 @@
 0. pip install SpeechRecognition
 1. create a virtual environment
-	If ever there is an issue you can create a new one manually:
-	Go to *Files* --> *Settings...* --> *Project: <project_name>* --> *Python Interpreter*
-	--> Scroll interpreter to *Show All...* --> Click on *+*
-	--> *Add Local Interpreter...* --> *Virtualenv Environment* --> *Ok*
 2. go to command prompt
 3. Enter the following commands: 
 	- python3 -m venv my_venv 
@@ -13,4 +9,3 @@
 	- python -m spacy download en_core_web_sm
 -\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-/-\-
 It should be working Now, enjoy :)
-Note: *word* == button

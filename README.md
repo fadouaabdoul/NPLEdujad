@@ -9,7 +9,12 @@ To utilize the Gram language correction tool, follow these steps for installatio
    ```shell
    pip install SpeechRecognition
    ```
-1. create a virtual environment
+1. create a virtual environment:
+
+   If ever there is an issue you can create a new one manually:
+   
+	Go to: *Files* --> *Settings...* --> *Project: <project_name>* --> *Python Interpreter* --> Scroll interpreter to *Show All...* --> Click on *+*
+	--> *Add Local Interpreter...* --> *Virtualenv Environment* --> *Ok*
 
 2. go to command prompt
 
@@ -30,3 +35,5 @@ python -m spacy download en_core_web_sm
 Optionally, try to install the Gramformer package manually.
 
 Now, enjoy :)
+
+Note: *word* == button
